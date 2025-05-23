@@ -1,30 +1,52 @@
-import { Image } from 'expo-image';
-import React, { useCallback, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-
-import { } from '@/app/db/contacts';
-import { connectToDatabase, createTables } from '@/app/db/db';
+import * as FileSystem from 'expo-file-system';
+import { Image } from 'expo-image';
+import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
+import React, { useEffect } from 'react';
+import { Platform, StyleSheet } from 'react-native';
+import { initializeDatabase } from '../exposqlite/sqlite';
 
 export default function HomeScreen() {
 
-  const loadData = useCallback(async () => {
-    try {
-      const db = await connectToDatabase()
-      await createTables(db)
-    } catch (error) {
-      console.error(error)
+  async function getSQLiteFileList() {
+    if (Platform.OS === 'web') {
+        // Implement web-specific file handling here
+        console.log('Web platform - using web APIs or simulated functionality');
+        // Example: Display a web alert
+        //alert('Web file operation simulated');
+    } else {
+      try {
+        const filesPath = `${FileSystem.documentDirectory}SQLite/`;
+
+        const filesDirectory = await FileSystem.readDirectoryAsync(filesPath);
+        console.log(`SQLite Files:`);
+        console.log(filesDirectory);
+      } catch (err) {
+        console.log(err);
+      }
     }
-  }, [])
+  }
 
   useEffect(() => {
-    loadData()
-  }, [loadData])
+    getSQLiteFileList();
+  }, []);
 
+    return (
+    <SQLiteProvider databaseName="luckydraw.db">
+      <Main />
+    </SQLiteProvider>
+  );
+
+}
+
+export function Main() {
+  const db = useSQLiteContext();
+  console.log('sqlite version', db.getFirstSync('SELECT sqlite_version()'));
+  initializeDatabase();
+  
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}

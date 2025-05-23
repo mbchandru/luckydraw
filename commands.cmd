@@ -3,4 +3,4 @@ del /s /q %localappdata%\Temp\metro-cache\*"
 for /d %%a in ("%localappdata%\Temp\metro-cache\*") do rmdir /s /q "%%a"
 
 
-yarn start --port=8082 --clear --reset-cache --tunnel
+npx expo start --port=8082 --clear --reset-cache --tunnel
