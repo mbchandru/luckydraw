@@ -5,8 +5,8 @@ import { ThemedView } from '@/components/ThemedView';
 import * as FileSystem from 'expo-file-system';
 import { Image } from 'expo-image';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
-import React, { useEffect } from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import React, { Suspense, useEffect } from 'react';
+import { Platform, StyleSheet, Text } from 'react-native';
 import { initializeDatabase } from '../exposqlite/sqlite';
 
 export default function HomeScreen() {
@@ -35,16 +35,22 @@ export default function HomeScreen() {
   }, []);
 
     return (
-    <SQLiteProvider databaseName="luckydraw.db">
-      <Main />
-    </SQLiteProvider>
+      <Suspense fallback={<Fallback />}>
+        <SQLiteProvider databaseName="luckydraw.db" useSuspense={true}>
+          <Main />
+        </SQLiteProvider>
+      </Suspense>
   );
 
 }
 
+function Fallback() {
+  return <Text>Loading database...</Text>;
+}
+
 export function Main() {
   const db = useSQLiteContext();
-  console.log('sqlite version', db.getFirstSync('SELECT sqlite_version()'));
+  console.log('sqlite version', db.getFirstSync('SELECT sqlite_version()'), + 'pathi ' + db.databasePath);
   initializeDatabase();
   
   return (

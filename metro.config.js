@@ -12,6 +12,9 @@ config.resolver.assetExts.push('db');
 // Add COEP and COOP headers to support SharedArrayBuffer
 config.server.enhanceMiddleware = (middleware) => {
   return (req, res, next) => {
+    if (req.url === '/__open-in-editor') {
+      return next();
+    }
     res.setHeader('Cross-Origin-Embedder-Policy', 'credentialless');
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
     middleware(req, res, next);
@@ -19,3 +22,21 @@ config.server.enhanceMiddleware = (middleware) => {
 };
 
 module.exports = config;
+
+
+/* module.exports = {
+  // ... other configurations
+  server: {
+    // ... other configurations
+    enhanceMiddleware: middleware => {
+      return (req, res, next) => {
+        if (req.url === '/__open-in-editor') {
+          return next();
+        }
+        res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+        res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+        return next();
+      };
+    },
+  },
+}; */

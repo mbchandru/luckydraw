@@ -42,23 +42,25 @@ export const addContact = async (db: SQLiteDatabase, contact: MyKeyValuePair) =>
 }
 
 
-/*export const getContacts = async (db: SQLite.SQLiteDatabase): Promise<Contact[]> => {
+export const getContacts = async (db: SQLiteDatabase) => {
   try {
-    const contacts: Contact[] = []
-    const results = await db.execAsync("SELECT * FROM Contacts")
+    const contacts = [];
+    const results = await db.execAsync("SELECT * FROM Contacts");
+    console.log('Here results ' + results);
     results?.forEach((result) => {
       for (let index = 0; index < result.rows.length; index++) {
-        contacts.push(result.rows.item(index))
+        contacts.push(result.rows.item(index));
+        console.log('Row ' + index + ' ' + result.rows(index));
       }
     })
-    return contacts
+    return contacts;
   } catch (error) {
     console.error(error)
     throw Error("Failed to get Contacts from database")
   }
 }
 
-export const updateContact = async (
+/*export const updateContact = async (
   db: SQLite.SQLiteDatabase,
   updatedContact: Contact
 ) => {

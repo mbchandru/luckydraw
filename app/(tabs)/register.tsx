@@ -7,7 +7,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 import { useState } from "react";
-import { addContact } from "../exposqlite/contacts";
+import { addContact, getContacts } from "../exposqlite/contacts";
 
 interface MyKeyValuePair {
   [key: string]: string;
@@ -54,6 +54,7 @@ const TabTwoScreen: React.FC<{myObject: MyKeyValuePair}> = ({ myObject }) => {
         };
         setContact({myObject});
         addContact(db, myObject);
+        getContacts(db);
       } catch (error) {
         console.error('ErrorC ' + error)
       }
