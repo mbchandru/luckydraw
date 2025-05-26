@@ -16,7 +16,7 @@ export default function AboutScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">༺ 𝐿𝓊𝒸𝓀𝓎 𝒟𝒾𝓅 ༻</ThemedText>
+        <ThemedText type="title">⋆♡ℓυ¢ку🧡∂ιρ♡⋆</ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText>
@@ -35,18 +35,23 @@ export default function AboutScreen() {
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: 'row',
+    //flexDirection: 'row',
+    paddingBottom: 25,
+    fontSize: 12,
     alignItems: 'center',
     gap: 8,
   },
   stepContainer: {
     gap: 8,
+    //height: '100%',
     marginBottom: 8,
+    alignItems: 'center',
   },
   reactLogo: {
     height: 178,
     width: 290,
     bottom: 0,
+    paddingTop: 15,
     left: 0,
     position: 'absolute',
   },

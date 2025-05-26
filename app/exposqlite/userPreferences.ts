@@ -5,16 +5,8 @@ type SingleUserPreference = "colorPreference" | "languagePreference"
 
 // This function works for both inserting and updating one user preference
 // It can be color preference or language preference
-export const updateSingleUserPreference = async (
-  db: SQLite.SQLiteDatabase,
-  singleUserPreference: SingleUserPreference,
-  newValue: string
-) => {
-  const query = `
-      INSERT INTO UserPreferences (id, ${singleUserPreference})
-      VALUES (1, ?)
-      ON CONFLICT(id) DO UPDATE SET ${singleUserPreference} = ?
-  `
+export const updateSingleUserPreference = async (db: SQLite.SQLiteDatabase, singleUserPreference: SingleUserPreference, newValue: string) => {
+  const query = `INSERT INTO UserPreferences (id, ${singleUserPreference}) VALUES (1, ?) ON CONFLICT(id) DO UPDATE SET ${singleUserPreference} = ?`;
   try {
     return db.execAsync(query)
   } catch (error) {
@@ -25,7 +17,7 @@ export const updateSingleUserPreference = async (
 export const getUserPreferences = async (
   db: SQLite.SQLiteDatabase,
 ) => {
-  const query = `SELECT * FROM UserPreferences WHERE id = 1`
+  const query = `SELECT * FROM UserPreferences WHERE id = 1`;
   try {
     const results = await db.execAsync(query)
     if (results[0]?.rows?.length) {
@@ -41,11 +33,8 @@ export const getUserPreferences = async (
 
 // Here is another version if you need to retrieve only one user preference.
 
-export const getSingleUserPreference = async (
-  db: SQLite.SQLiteDatabase,
-  userPreference: SingleUserPreference
-): Promise<string | null> => {
-  const query = `SELECT ${userPreference} FROM UserPreferences WHERE id = 1`
+export const getSingleUserPreference = async (db: SQLite.SQLiteDatabase, userPreference: SingleUserPreference): Promise<string | null> => {
+  const query = `SELECT ${userPreference} FROM UserPreferences WHERE id = 1`;
   try {
     const results = await db.execAsync(query)
     if (results[0]?.rows?.length) {

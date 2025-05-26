@@ -5,7 +5,7 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
+import { useSQLiteContext } from "expo-sqlite";
 import { useState } from "react";
 import { addContact, getContacts } from "../exposqlite/contacts";
 
@@ -21,44 +21,37 @@ let myObject: MyKeyValuePair = {
 
 const TabTwoScreen: React.FC<{myObject: MyKeyValuePair}> = ({ myObject }) => {
 //export default function TabTwoScreen() {
-  return (
-    <SQLiteProvider databaseName="luckydraw.db">
-      <Main />
-    </SQLiteProvider>
-    );
-  }
-  
-  export function Main() {
-    const [contact, setContact] = useState({myObject});
-    const db = useSQLiteContext();
-    console.log('sqlite version', db.getFirstSync('SELECT sqlite_version()'));
 
-    const {
-      control,
-      handleSubmit,
-      formState: { errors },
-    } = useForm({
-      defaultValues: {
-        name: "",
-        email: "",
-        mobile: "",
-      },
-    })
+  const [contact, setContact] = useState({myObject});
+  const db = useSQLiteContext();
+  console.log('sqlite dbpath', db.databasePath);
 
-    const onSubmit = async (data) => {
-      try {
-        const myObject: MyKeyValuePair = {
-          name: data.name,
-          email: data.email,
-          mobile: data.mobile,
-        };
-        setContact({myObject});
-        addContact(db, myObject);
-        getContacts(db);
-      } catch (error) {
-        console.error('ErrorC ' + error)
-      }
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      email: "",
+      mobile: "",
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      const myObject: MyKeyValuePair = {
+        name: data.name,
+        email: data.email,
+        mobile: data.mobile,
+      };
+      setContact({myObject});
+      addContact(db, myObject);
+      getContacts(db);
+    } catch (error) {
+      console.error('ErrorC ' + error)
     }
+  }
   return (
     
     <ParallaxScrollView
@@ -75,75 +68,75 @@ const TabTwoScreen: React.FC<{myObject: MyKeyValuePair}> = ({ myObject }) => {
         <ThemedText type="title">Register</ThemedText>
       </ThemedView>
       <ThemedText>We respect your privacy and data is not traded.{'\n'}Input mobile or email, and submit...</ThemedText>
-          <Controller
-            control={control}
-            rules={{
-              required: 'Name is required',
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput style={styles.input}
-                placeholder="Name"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
-            name="name"
+      <Controller
+        control={control}
+        rules={{
+          required: 'Name is required',
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput style={styles.input}
+            placeholder="Name"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
           />
-          {errors.name && <Text style={styles.infotext}>{errors.name.message}</Text>}
+        )}
+        name="name"
+      />
+      {errors.name && <Text style={styles.infotext}>{errors.name.message}</Text>}
 
-          <Controller
-            control={control}
-            rules={{
-              maxLength:10,
-              min:10,
-              required: false, //'Mobile number is required.',
-              pattern: {
-                value: /^[6789]\d{9}$/i,
-                message: 'Invalid mobile number',
-              },
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput style={styles.input}
-                placeholder="Mobile number"
-                maxLength={10}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                //defaultValue=""
-              />
-            )}
-            name="mobile"
+      <Controller
+        control={control}
+        rules={{
+          maxLength:10,
+          min:10,
+          required: false, //'Mobile number is required.',
+          pattern: {
+            value: /^[6789]\d{9}$/i,
+            message: 'Invalid mobile number',
+          },
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput style={styles.input}
+            placeholder="Mobile number"
+            maxLength={10}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            //defaultValue=""
           />
-          {errors.mobile && <Text style={styles.infotext}>{errors.mobile.message}</Text>}
+        )}
+        name="mobile"
+      />
+      {errors.mobile && <Text style={styles.infotext}>{errors.mobile.message}</Text>}
 
-          <Controller
-            control={control}
-            rules={{
-              maxLength: 100,
-              required: 'Email is required',
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email address',
-              }
-            }}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput style={styles.input}
-                placeholder="Email"
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                //defaultValue=""              
-              />
-              )}
-            name="email"
+      <Controller
+        control={control}
+        rules={{
+          maxLength: 100,
+          required: 'Email is required',
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+            message: 'Invalid email address',
+          }
+        }}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput style={styles.input}
+            placeholder="Email"
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            //defaultValue=""              
           />
-          {errors.email && <Text style={styles.infotext}>{errors.email.message}</Text>}
-        <TouchableOpacity
-          style={styles.submit}
-          onPress={handleSubmit(onSubmit)}>
-          <Text style={styles.submitText}>Submit</Text>
-        </TouchableOpacity>
+          )}
+        name="email"
+      />
+      {errors.email && <Text style={styles.infotext}>{errors.email.message}</Text>}
+      <TouchableOpacity
+        style={styles.submit}
+        onPress={handleSubmit(onSubmit)}>
+        <Text style={styles.submitText}>Submit</Text>
+      </TouchableOpacity>
     </ParallaxScrollView>
   );
 };

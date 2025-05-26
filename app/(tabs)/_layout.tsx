@@ -7,10 +7,33 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
 
 export default function TabLayout() {
+
+  return (
+    <SQLiteProvider databaseName='luckydraw.db' assetSource={{ assetId: require('./assets/db/luckydraw.db') }}>
+      <Main></Main>
+    </SQLiteProvider>
+  );
+}
+
+export function Main() {
   const colorScheme = useColorScheme();
 
+  const db = useSQLiteContext();
+  console.log('sqlite version', db.databasePath);
+  try {
+    const userPreferencesQuery = `CREATE TABLE IF NOT EXISTS UserPreferences (id INTEGER DEFAULT 1, colorPreference TEXT, languagePreference TEXT, PRIMARY KEY(id))`;
+    const contactsQuery = `CREATE TABLE IF NOT EXISTS Contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, mobile TEXT, email TEXT)`;
+    db.execAsync(userPreferencesQuery);
+    db.execAsync(contactsQuery);
+
+    console.log('Database and tables created successfully');
+  } catch (error) {
+    console.error('Failed to initialize database:', error);
+  }
+  
   return (
     <Tabs
       screenOptions={{

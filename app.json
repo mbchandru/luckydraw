@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Lucky Dip",
+    "name": "⋆♡ℓυ¢ку🧡∂ιρ♡⋆",
     "slug": "Lucky Draw",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -36,7 +36,9 @@
           "backgroundColor": "#ffffff"
         }
       ],
-       ["expo-sqlite", {
+      [
+        "expo-sqlite",
+        {
           "enableFTS": true,
           "useSQLCipher": true,
           "android": {
@@ -44,9 +46,13 @@
             "useSQLCipher": false
           },
           "ios": {
-            "customBuildFlags": ["-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"]
+            "customBuildFlags": [
+              "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
+            ]
           }
-      }]
+        }
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true

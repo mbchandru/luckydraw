@@ -1,7 +1,3 @@
-/* import {
-  SQLiteDatabase,
-} from "react-native-sqlite-storage"; */
-
 import { SQLiteDatabase } from "expo-sqlite";
 
 interface MyKeyValuePair {
@@ -15,36 +11,25 @@ let contact: MyKeyValuePair = {
 };
 
 export const addContact = async (db: SQLiteDatabase, contact: MyKeyValuePair) => {
-  //console.log('C--sqlite version', db.getFirstSync('SELECT sqlite_version()'));
   const entries = Object.entries(contact);
 
   entries.forEach(([key, value]) => {
     console.log(`Key: ${key}, Value: ${value}`);
   });
-  const insertQuery = `
-   INSERT INTO Contacts (name, mobile, email) VALUES (?, ?, ?)`;
-
-  //console.log('contact email ' + contact.email);
-    const values = [
-      contact.name,
-      contact.email,
-      contact.mobile,
-    ];
+  const insertQuery = `INSERT INTO Contacts (name, mobile, email) VALUES (?, ?, ?)`;
   try {
-    //const statement = await db.prepareAsync(insertQuery);
-    //return await statement.executeAsync([contact.name, contact.email, contact.mobile]);
     db.runAsync(insertQuery, contact.name, contact.email, contact.mobile);
+    //db.closeAsync();
     console.log('db path ' + db.databasePath);
   } catch (error) {
-    console.error(error)
-    throw Error("Failed to add contact")
+    console.error('Errors:' + error);
+    throw Error("Failed to add contact");
   }
 }
 
-
 export const getContacts = async (db: SQLiteDatabase) => {
   try {
-    const contacts = [];
+    const contacts : MyKeyValuePair[] = [];
     const results = await db.execAsync("SELECT * FROM Contacts");
     console.log('Here results ' + results);
     results?.forEach((result) => {
@@ -60,15 +45,9 @@ export const getContacts = async (db: SQLiteDatabase) => {
   }
 }
 
-/*export const updateContact = async (
-  db: SQLite.SQLiteDatabase,
-  updatedContact: Contact
+export const updateContact = async (db: SQLiteDatabase, updatedContact: MyKeyValuePair
 ) => {
-  const updateQuery = `
-    UPDATE Contacts
-    SET name = ?, mobile = ?, email = ?
-    WHERE id = ?
-  `
+  const updateQuery = `UPDATE Contacts SET name = ?, mobile = ?, email = ? WHERE id = ?`;
   const values = [
     updatedContact.name,
     updatedContact.mobile,
@@ -83,16 +62,13 @@ export const getContacts = async (db: SQLiteDatabase) => {
   }
 }
 
-export const deleteContact = async (db: SQLite.SQLiteDatabase, contact: Contact) => {
-  const deleteQuery = `
-    DELETE FROM Contacts
-    WHERE id = ?
-  `
-  const values = [contact.id]
+export const deleteContact = async (db: SQLiteDatabase, contact: MyKeyValuePair) => {
+  const deleteQuery = `DELETE FROM Contacts WHERE id = ?`;
+  const values = [contact.id];
   try {
     return db.runAsync(deleteQuery, values)
   } catch (error) {
     console.error(error)
     throw Error("Failed to remove contact")
   }
-} */
+}

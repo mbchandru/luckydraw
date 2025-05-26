@@ -4,19 +4,17 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import * as FileSystem from 'expo-file-system';
 import { Image } from 'expo-image';
-import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
-import React, { Suspense, useEffect } from 'react';
-import { Platform, StyleSheet, Text } from 'react-native';
-import { initializeDatabase } from '../exposqlite/sqlite';
+import React, { useEffect } from 'react';
+import { Platform, StyleSheet } from 'react-native';
 
 export default function HomeScreen() {
 
   async function getSQLiteFileList() {
     if (Platform.OS === 'web') {
-        // Implement web-specific file handling here
-        console.log('Web platform - using web APIs or simulated functionality');
-        // Example: Display a web alert
-        //alert('Web file operation simulated');
+      // Implement web-specific file handling here
+      console.log('Web platform - using web APIs or simulated functionality');
+      // Example: Display a web alert
+      //alert('Web file operation simulated');
     } else {
       try {
         const filesPath = `${FileSystem.documentDirectory}SQLite/`;
@@ -34,25 +32,6 @@ export default function HomeScreen() {
     getSQLiteFileList();
   }, []);
 
-    return (
-      <Suspense fallback={<Fallback />}>
-        <SQLiteProvider databaseName="luckydraw.db" useSuspense={true}>
-          <Main />
-        </SQLiteProvider>
-      </Suspense>
-  );
-
-}
-
-function Fallback() {
-  return <Text>Loading database...</Text>;
-}
-
-export function Main() {
-  const db = useSQLiteContext();
-  console.log('sqlite version', db.getFirstSync('SELECT sqlite_version()'), + 'pathi ' + db.databasePath);
-  initializeDatabase();
-  
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
